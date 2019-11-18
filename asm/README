@@ -1,0 +1,11 @@
+take macro11 from: https://gitlab.com/Rhialto/macro11/tree/master
+add -DRT11 to compile options
+
+use it like: macro11 -o name.obj -l name.lst name.mac
+
+
+take obj->bin converter from here:
+https://raw.githubusercontent.com/smaslovski/pdp11dasm/master/utils/obj2bkb
+
+use it like: obj2bkb --base 01000 --binary -o 1.bin 1.obk
+
