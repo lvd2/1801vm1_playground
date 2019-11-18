@@ -1,0 +1,4 @@
+#!/bin/bash
+
+vlog -sv -novopt -incr tb.v ../cpu11/vm1/hdl/org/rtl/vm1_qbus.v ../cpu11/vm1/hdl/org/rtl/vm1.v ../cpu11/vm1/hdl/wbc/rtl/vm1_plm.v ../cpu11/vm1/hdl/wbc/rtl/vm1_tve.v 
+
