@@ -90,30 +90,24 @@ module tb;
 
 
 	// start address
-	wire [15:0] start = 16'd512;
-	assign ad_n = (addr==16'o177716 && !din_n) ? (~start) : 16'hZZZZ;
+	wire [15:0] start = 16'd256;
+	assign ad_n = (sel_n==2'b10 && addr==16'o177716 && !din_n) ? (~start) : 16'hZZZZ;
 
 
-	// infinite loop at address 512
-	reg my_rply_n=1'b1;
 
-	reg count=1'b0;
+	// RAM memory
+	ram ram
+	(
+		.clk(clk),
 
-	always
-	begin
-		@(negedge sync_n);
-		my_rply_n <= 1'b0;
-		@(posedge (din_n&dout_n));
-		my_rply_n <= 1'b1;
-	end
-
-	wire [15:0] jmp_minusPC = 16'o000147;
-	assign ad_n = (addr==16'd512 && !din_n) ? (~jmp_minusPC) : 16'hZZZZ;
-	assign rply_n = (addr==16'd512 && !sync_n) ? (count ? my_rply_n : din_n) : 1'bZ;
-
-	always @(posedge sync_n)
-		count <= ~count;
-
+		.ad_n  (ad_n  ),
+		.sel_n (sel_n ),
+		.sync_n(sync_n),
+		.dout_n(dout_n),
+		.din_n (din_n ),
+		.wtbt_n(wtbt_n),
+		.rply_n(rply_n)
+	);
 
 
 
