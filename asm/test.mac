@@ -1,0 +1,9 @@
+	.PSECT	test,ABS
+
+	.=400
+
+loop:	dec	#^D32
+	bne	loop
+
+	wait
+
