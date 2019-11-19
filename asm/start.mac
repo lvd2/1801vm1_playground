@@ -1,0 +1,16 @@
+; Startup for measuring command speeds
+
+
+	.PSECT	start,ABS
+	.=400 ;256dec
+
+	mov	#^X8000,sp
+	mov	sp,r0
+	mov	sp,r1
+	mov	sp,r2
+	mov	sp,r3
+	mov	sp,r4
+	mov	sp,r5
+
+	jmp	(sp)
+

@@ -95,6 +95,15 @@ module tb;
 
 
 
+	initial
+	begin
+		wait(rst_n==1'b1);
+
+		ram.load_mem("../asm/test.bin");
+	end
+
+
+
 	// RAM memory
 	ram ram
 	(

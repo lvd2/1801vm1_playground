@@ -59,5 +59,68 @@ module ram
 		end
 	end
 
+
+
+
+	task load_mem(input string filename);
+
+		int i;
+		int fd;
+		int fsize;
+		int tmp;
+
+		bit [15:0] array[];
+
+		// open file
+		fd = $fopen(filename,"rb");
+		if( !fd )
+		begin
+			$display("Can't open file %s!",filename);
+			$stop;
+		end
+
+		// get file size
+		$fseek(fd,0,2);
+		fsize=$ftell(fd);
+		$rewind(fd);
+
+		if( (fsize%2) || (fsize<4) || (fsize>(65536+4)) )
+		begin
+			$display("File %s length %d is bad!",filename,fsize);
+			$display("Must be even, GE than 4, LE than 65540");
+			$stop;
+		end
+
+		
+		// load file
+		array = new[fsize];
+
+		for(i=0;i<fsize/2;i++)
+		begin : read_file
+			bit [15:0] tmp;
+			$fread(tmp,fd);
+			array[i] = {tmp[7:0],tmp[15:8]};
+		end
+
+for(i=0;i<fsize/2;i++) $display("%h ",array[i]);
+
+		// check header
+		if( array[1] != (fsize-4) )
+		begin
+			$display("File length %d (0x%04h) does not correspond to header length 0x%04h!",fsize,fsize,array[1]);
+		end
+
+		// load into RAM
+		for(i=0;i<array[1]/2;i++)
+		begin : load_mem
+			int addr;
+
+			addr = i+array[0]/2;
+
+			mem[addr[14:0]] = array[2+i];
+		end
+
+
+	endtask
 endmodule
 
