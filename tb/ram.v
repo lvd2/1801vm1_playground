@@ -10,9 +10,12 @@ module ram
 	input  wire        wtbt_n,
 	output wire        rply_n
 );
-	reg [15:0] addr;
+	parameter EARLY_RPLY = 0;
 
+
+	reg [15:0] addr;
 	reg selected;
+	reg early_rply;
 
 
 	reg [15:0] mem [0:32767];
@@ -37,8 +40,16 @@ module ram
 		selected <= (sel_n==2'b11);
 
 
+	// early rply generation
+	always @(posedge clk, posedge sync_n)
+	if( sync_n )
+		early_rply <= wtbt_n && EARLY_RPLY;
+	else if( !din_n || !dout_n )
+		early_rply <= 1'b0;
+
+
 	// rply_n generation
-	assign rply_n = (selected && !sync_n) ? (din_n & dout_n) : 1'bZ;
+	assign rply_n = (selected && !sync_n) ? (din_n & dout_n & (~early_rply)) : 1'bZ;
 
 
 	// data read

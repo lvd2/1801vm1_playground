@@ -3,15 +3,9 @@
 	.=400
 
 
-	jmp	l1
+	jmp	@#l1
 l1:
-	jmp	l2
-l2:
-	jmp	l3
-l3:
-	nop
-	nop
-	nop
+	mov	#1,#2
 
 	mov	r0,r1
 	mov	r1,r2
