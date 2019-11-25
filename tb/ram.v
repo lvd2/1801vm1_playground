@@ -11,7 +11,7 @@ module ram
 	output wire        rply_n
 );
 	parameter EARLY_RPLY = 0;
-
+	parameter HIGH_BOUND = 16'hFF00;
 
 	reg [15:0] addr;
 	reg selected;
@@ -37,7 +37,7 @@ module ram
 
 	// whether memory is selected (not internal CPU ports)
 	always @(negedge sync_n)
-		selected <= (sel_n==2'b11);
+		selected <= (sel_n==2'b11) && ((~ad_n)<HIGH_BOUND);
 
 
 	// early rply generation
