@@ -43,8 +43,10 @@ module tb;
 
 
 	parameter string LOAD_FILE="../asm/test.bin";
-
 	parameter [15:0] START_ADDR=16'd256;
+
+	parameter [15:0] TPS = 16'o177564;
+	parameter [15:0] TPB = 16'o177566;
 
 
 
@@ -100,6 +102,10 @@ module tb;
 
 
 
+
+
+
+	// load binary to execute
 	initial
 	begin
 		wait(rst_n==1'b1);
@@ -178,6 +184,7 @@ module tb;
 	begin
 		if( bus_counter>5 )
 		begin
+			$display("");
 			$display("No RPLY at %04h",addr);
 			$stop;
 		end
@@ -187,6 +194,17 @@ module tb;
 
 
 
+	// TPS/TPB emulation
+	// TPS
+	assign ad_n   = (sel_n==2'b11 && addr[15:1]==TPS[15:1] && !din_n) ? (~16'h80) : 16'hZZZZ;
+	assign rply_n = (sel_n==2'b11 && addr[15:1]==TPS[15:1] && !din_n) ? 1'b0     : 1'bZ;
+	// TPB
+	assign rply_n = (sel_n==2'b11 && addr[15:1]==TPB[15:1] && !dout_n) ? 1'b0     : 1'bZ;
+	always @(posedge dout_n)
+	if( sel_n==2'b11 && addr[15:1]==TPB[15:1] && !wtbt_n && addr[0]==1'b0 )
+	begin
+		$write("%s",~ad_n[7:0]);
+	end
 
 
 
