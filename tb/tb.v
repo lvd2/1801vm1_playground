@@ -34,11 +34,17 @@ module tb;
 
 	tri1 [1:0] sel_n;
 
-
 	reg [15:0] addr;
 
 
+	int bus_counter=0;
 
+
+
+
+	parameter string LOAD_FILE="../asm/test.bin";
+
+	parameter [15:0] START_ADDR=16'd256;
 
 
 
@@ -90,8 +96,7 @@ module tb;
 
 
 	// start address
-	wire [15:0] start = 16'd256;
-	assign ad_n = (sel_n==2'b10 && addr==16'o177716 && !din_n) ? (~start) : 16'hZZZZ;
+	assign ad_n = (sel_n==2'b10 && addr==16'o177716 && !din_n) ? (~START_ADDR) : 16'hZZZZ;
 
 
 
@@ -99,7 +104,7 @@ module tb;
 	begin
 		wait(rst_n==1'b1);
 
-		ram.load_mem("../asm/test.bin");
+		ram.load_mem(LOAD_FILE);
 	end
 
 
@@ -159,7 +164,24 @@ module tb;
 
 
 
-
+	// no-rply condition
+	always @(posedge clk)
+	if( !rst_n )
+		bus_counter = 0;
+	else
+	if( !din_n || !dout_n )
+		bus_counter = bus_counter + 1;
+	else
+		bus_counter = 0;
+	//
+	always @*
+	begin
+		if( bus_counter>5 )
+		begin
+			$display("No RPLY at %04h",addr);
+			$stop;
+		end
+	end
 
 
 
