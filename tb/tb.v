@@ -180,15 +180,15 @@ module tb;
 	else
 		bus_counter = 0;
 	//
-	always @*
-	begin
-		if( bus_counter>5 )
-		begin
-			$display("");
-			$display("No RPLY at %04h",addr);
-			$stop;
-		end
-	end
+//	always @*
+//	begin
+//		if( bus_counter>5 )
+//		begin
+//			$display("");
+//			$display("No RPLY at %04h",addr);
+//			$stop;
+//		end
+//	end
 
 
 
